@@ -1,29 +1,12 @@
 import express from "express";
-import Product from "../models/productModel.js";
-const reouter = express.Router();
+import {
+  getPorducts,
+  getProductById,
+} from "../controllers/productController.js";
 
-//@desc request all products
-//@route GET/api/products
-//@access public
-reouter.get("/", async (req, res) => {
-  try {
-    const products = await Product.find({});
-    res.json(products);
-  } catch (error) {
-    res.status(404).json({ message: "Not Found" });
-  }
-});
+const router = express.Router();
 
-//@desc request product by id
-//@route GET/api/products/:id
-//@access public
-reouter.get("/:id", async (req, res) => {
-  try {
-    const product = await Product.findById(req.params.id);
-    res.json(product);
-  } catch (error) {
-    res.status(404).json({ message: "Not Found" });
-  }
-});
+router.route("/").get(getPorducts);
+router.route("/:id").get(getProductById);
 
-export default reouter;
+export default router;
