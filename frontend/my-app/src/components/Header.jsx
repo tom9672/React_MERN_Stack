@@ -19,7 +19,7 @@ const Header = () => {
       <Navbar bg="dark" variant="dark" expand="lg" collapseOnSelect>
         <Container>
           <LinkContainer to="/">
-            <Navbar.Brand>Bo's Store</Navbar.Brand>
+            <Navbar.Brand>XXXXX Store</Navbar.Brand>
           </LinkContainer>
 
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
@@ -63,23 +63,17 @@ const Header = () => {
                 </LinkContainer>
               )}
               {userInfo && userInfo.isAdmin && (
-                <NavDropdown title='operation' id='admin_menu'>
-                  <LinkContainer to='/admin/userList'>
-                    <NavDropdown.Item>
-                      User List
-                    </NavDropdown.Item>
+                <NavDropdown title="operation" id="admin_menu">
+                  <LinkContainer to="/admin/userList">
+                    <NavDropdown.Item>User List</NavDropdown.Item>
                   </LinkContainer>
 
-                  <LinkContainer to='/admin/productList'>
-                    <NavDropdown.Item>
-                     Product List
-                    </NavDropdown.Item>
+                  <LinkContainer to="/admin/productList">
+                    <NavDropdown.Item>Product List</NavDropdown.Item>
                   </LinkContainer>
 
-                  <LinkContainer to='/admin/orderList'>
-                    <NavDropdown.Item>
-                    Order List
-                    </NavDropdown.Item>
+                  <LinkContainer to="/admin/orderList">
+                    <NavDropdown.Item>Order List</NavDropdown.Item>
                   </LinkContainer>
                 </NavDropdown>
               )}
