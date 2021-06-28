@@ -1,4 +1,7 @@
 import {
+  PRODUCT_ADMIN_DELETE_FAIL,
+  PRODUCT_ADMIN_DELETE_REQUEST,
+  PRODUCT_ADMIN_DELETE_SUCCESS,
   PRODUCT_DETAIL_FAIL,
   PRODUCT_DETAIL_REQUEST,
   PRODUCT_DETAIL_SUCCESS,
@@ -40,3 +43,24 @@ export const detailProduct = (id) => async (dispatch) => {
     });
   }
 };
+
+export const deleteProductById =(id)=> async (dispatch, getState) =>{
+  try{
+    dispatch({type:PRODUCT_ADMIN_DELETE_REQUEST})
+
+    const {userLogin:{userInfo}} =getState()
+
+    const config ={headers:{Authorization: `Bearer ${userInfo.token}`}}
+
+    await axios.delete(`/api/products/${id}`, config)
+    dispatch({type:PRODUCT_ADMIN_DELETE_SUCCESS})
+  }catch(error){
+    dispatch({
+      type:PRODUCT_ADMIN_DELETE_FAIL,
+      payload:
+        error.response && error.response.data.message
+        ? error.response.data.message
+        : error.response
+    })
+  }
+} 
