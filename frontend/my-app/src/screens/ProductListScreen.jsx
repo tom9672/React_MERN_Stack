@@ -4,7 +4,8 @@ import { Table, Button, Row, Col,Image } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
-import { listProduct,deleteProductById } from "../actions/productActions";
+import { listProduct,deleteProductById, createProduct } from "../actions/productActions";
+import {PRODUCT_ADMIN_CREATE_RESET} from '../constant/productConstants'
 
 const ProductListScreen = ({ history }) => {
   const dispatch = useDispatch();
@@ -17,13 +18,20 @@ const ProductListScreen = ({ history }) => {
   const deleteProductByIdState = useSelector((state) => state.deleteProductById);
   const { loading:loadingDelete, error:errorDelete, success:successDelete } = deleteProductByIdState;
 
+  const createProductState = useSelector((state) => state.createProduct);
+  const { loading:loadingCreate, error:errorCreate, success:successCreate, product:productCreate } = createProductState;
+
   useEffect(() => {
-    if (userInfo && userInfo.isAdmin) {
-      dispatch(listProduct());
-    } else {
+    dispatch({type:PRODUCT_ADMIN_CREATE_RESET})
+    if(!userInfo.isAdmin){
       history.push("/login");
     }
-  }, [dispatch, history, userInfo, successDelete]);
+    if(successCreate){
+      history.push(`/admin/product/${productCreate._id}/edit`)
+    }else{
+      dispatch(listProduct())
+    }
+  }, [dispatch, history, userInfo, successDelete, successCreate, productCreate]);
 
   const deleteProductHandler = (id) => {
     if (window.confirm("Are you sure")) {
@@ -32,7 +40,7 @@ const ProductListScreen = ({ history }) => {
   };
 
   const addProductHandler =()=>{
-      // add product
+      dispatch(createProduct())
   }
 
   return (
@@ -44,6 +52,9 @@ const ProductListScreen = ({ history }) => {
 
       {loadingDelete && <Loader />}
       {errorDelete && <Message variant="danger">{errorDelete}</Message>}
+
+      {loadingCreate && <Loader />}
+      {errorCreate && <Message variant="danger">{errorCreate}</Message>}
 
       {loading ? (
         <Loader />

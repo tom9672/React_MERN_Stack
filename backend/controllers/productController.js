@@ -1,3 +1,4 @@
+import e from "express";
 import asyncHandler from "express-async-handler";
 import Product from "../models/productModel.js";
 
@@ -35,4 +36,51 @@ export const deleteProductById = asyncHandler(async (req, res) => {
     res.status(404);
     throw new Error("Not found");
   }
+});
+
+//@desc add product
+//@route post/api/products
+//@access private(admin only)
+export const addProduct = asyncHandler(async (req, res) => {
+  // create a template of product
+  const product = new Product({
+    name:'sample product name',
+    price:0,
+    user:req.user._id,
+    img:'sample product image',
+    category:'sample product category',
+    quantity:0,
+    description:'sample product description'
+  })
+
+  const createdProduct = await product.save()
+  res.status(201).json(createdProduct)
+  
+});
+
+//@desc edit product
+//@route put/api/products/:id
+//@access private(admin only)
+export const updateProduct = asyncHandler(async (req, res) => {
+
+  const {name,price, description, image, category, quantity} = req.body
+
+  const product = await Product.findById(req.params.id)
+  
+  if(product){
+    product.name = name
+    product.price = price
+    product.description = description
+    product.image = image
+    product.category = category
+    product.quantity = quantity
+
+    const updatedProduct = await product.save()
+    res.status(201).json(updatedProduct)
+
+  }else{
+    res.status(404)
+    res.json('Not found product')
+  }
+  
 });

@@ -1,7 +1,13 @@
 import {
+  PRODUCT_ADMIN_CREATE_FAIL,
+  PRODUCT_ADMIN_CREATE_REQUEST,
+  PRODUCT_ADMIN_CREATE_SUCCESS,
   PRODUCT_ADMIN_DELETE_FAIL,
   PRODUCT_ADMIN_DELETE_REQUEST,
   PRODUCT_ADMIN_DELETE_SUCCESS,
+  PRODUCT_ADMIN_UPDATE_FAIL,
+  PRODUCT_ADMIN_UPDATE_REQUEST,
+  PRODUCT_ADMIN_UPDATE_SUCCESS,
   PRODUCT_DETAIL_FAIL,
   PRODUCT_DETAIL_REQUEST,
   PRODUCT_DETAIL_SUCCESS,
@@ -57,6 +63,51 @@ export const deleteProductById =(id)=> async (dispatch, getState) =>{
   }catch(error){
     dispatch({
       type:PRODUCT_ADMIN_DELETE_FAIL,
+      payload:
+        error.response && error.response.data.message
+        ? error.response.data.message
+        : error.response
+    })
+  }
+} 
+
+
+export const updateProduct =(product)=> async (dispatch, getState) =>{
+  try{
+    dispatch({type:PRODUCT_ADMIN_UPDATE_REQUEST})
+
+    const {userLogin:{userInfo}} =getState()
+
+    const config ={headers:{Authorization: `Bearer ${userInfo.token}`}}
+
+    const {data} = await axios.put(`/api/products/${product._id}`, product, config)
+    dispatch({type:PRODUCT_ADMIN_UPDATE_SUCCESS})
+    dispatch({type:PRODUCT_DETAIL_SUCCESS, payload:data })
+  }catch(error){
+    dispatch({
+      type:PRODUCT_ADMIN_UPDATE_FAIL,
+      payload:
+        error.response && error.response.data.message
+        ? error.response.data.message
+        : error.response
+    })
+  }
+} 
+
+export const createProduct =()=> async (dispatch, getState) =>{
+  try{
+    dispatch({type:PRODUCT_ADMIN_CREATE_REQUEST})
+
+    const {userLogin:{userInfo}} =getState()
+
+    const config ={headers:{Authorization: `Bearer ${userInfo.token}`}}
+
+    const {data} = await axios.post(`/api/products/`,{}, config)
+    dispatch({type:PRODUCT_ADMIN_CREATE_SUCCESS, payload:data})
+
+  }catch(error){
+    dispatch({
+      type:PRODUCT_ADMIN_CREATE_FAIL,
       payload:
         error.response && error.response.data.message
         ? error.response.data.message
