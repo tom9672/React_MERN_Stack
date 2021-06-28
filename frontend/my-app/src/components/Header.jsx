@@ -5,6 +5,8 @@ import { LinkContainer } from "react-router-bootstrap";
 import { userLogout } from "../actions/userActions";
 import { useHistory } from "react-router-dom";
 const Header = () => {
+
+  const adminIcon = (<i className='fas fa-user-cog'>operation</i>)
   const dispatch = useDispatch();
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
@@ -63,7 +65,7 @@ const Header = () => {
                 </LinkContainer>
               )}
               {userInfo && userInfo.isAdmin && (
-                <NavDropdown title="operation" id="admin_menu">
+                <NavDropdown title={adminIcon} id="admin_menu">
                   <LinkContainer to="/admin/userList">
                     <NavDropdown.Item>User List</NavDropdown.Item>
                   </LinkContainer>

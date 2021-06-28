@@ -15,6 +15,7 @@ import GetOrderByIdScreen from "./screens/GetOrderByIdScreen";
 import AllOrdersScreen from "./screens/AllOrdersScreen";
 import UserListScreen from './screens/UserListScreen'
 import UserEditScreen from './screens/UserEditScreen'
+import ProductListScreen from './screens/ProductListScreen'
 function App() {
   return (
     <Router>
@@ -33,6 +34,7 @@ function App() {
           <Route path="/order/user/:id" component={AllOrdersScreen} />
           <Route path="/admin/userList" component={UserListScreen}/>
           <Route path="/admin/user/:id/edit" component={UserEditScreen}/>
+          <Route path="/admin/productList" component={ProductListScreen}/>
           <Route path="/" component={HomeScreen} exact />
         </Container>
       </main>
