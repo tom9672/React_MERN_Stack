@@ -8,6 +8,9 @@ import {
   ORDER_GETALL_REQUEST,
   ORDER_GETALL_SUCCESS,
   ORDER_GETALL_FAIL,
+  ORDER_ADMIN_GETALL_REQUEST,
+  ORDER_ADMIN_GETALL_SUCCESS,
+  ORDER_ADMIN_GETALL_FAIL,
 } from "../constant/orderConstants";
 
 export const orderCreateReducer = (state = {}, action) => {
@@ -47,6 +50,22 @@ export const getAllOrdersReducer = (state = {}, action) => {
       return { loading: false, allOrders: action.payload, success: true };
 
     case ORDER_GETALL_FAIL:
+      return { loading: false, error: action.payload };
+
+    default:
+      return state;
+  }
+};
+
+export const orderListReducer = (state = {orders:[]}, action) => {
+  switch (action.type) {
+    case ORDER_ADMIN_GETALL_REQUEST:
+      return { loading: true };
+
+    case ORDER_ADMIN_GETALL_SUCCESS:
+      return { loading: false, orders: action.payload };
+
+    case ORDER_ADMIN_GETALL_FAIL:
       return { loading: false, error: action.payload };
 
     default:

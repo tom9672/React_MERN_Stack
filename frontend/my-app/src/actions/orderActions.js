@@ -8,6 +8,9 @@ import {
   ORDER_GETALL_REQUEST,
   ORDER_GETALL_SUCCESS,
   ORDER_GETALL_FAIL,
+  ORDER_ADMIN_GETALL_REQUEST,
+  ORDER_ADMIN_GETALL_SUCCESS,
+  ORDER_ADMIN_GETALL_FAIL,
 } from "../constant/orderConstants";
 import axios from "axios";
 
@@ -92,3 +95,29 @@ export const getAllOrders = (id) => async (dispatch, getState) => {
     });
   }
 };
+
+export const orderList = () => async(dispatch, getState)=>{
+  try {
+    dispatch({ type: ORDER_ADMIN_GETALL_REQUEST });
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        "Content-type": "application/json",
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+    const { data } = await axios.get(`/api/orders`, config);
+    dispatch({ type: ORDER_ADMIN_GETALL_SUCCESS, payload: data });
+  } catch (error) {
+    dispatch({
+      type: ORDER_ADMIN_GETALL_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.response,
+    });
+  }
+}
