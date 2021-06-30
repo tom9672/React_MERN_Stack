@@ -71,7 +71,7 @@ export const updateProduct = asyncHandler(async (req, res) => {
     product.name = name
     product.price = price
     product.description = description
-    product.image = image
+    product.img = image
     product.category = category
     product.quantity = quantity
 

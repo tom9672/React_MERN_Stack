@@ -8,19 +8,19 @@ const storage=multer.diskStorage({
     destination(req, file, cb) {
         cb(null,'uploads/')},
     filename(req, file,cb){
-        cb(null,`${file.fieldname} - ${Date.now()}${path.extname(file.originalname)}`)
+        cb(null,`${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`)
     }
 })
 
 // check file type
 const checkFileType=(file,cb) =>{
-    const fileTypes = /jpg||jepg||png/
+    const fileTypes = /jpg|jepg|png/
     const extname = fileTypes.test(path.extname(file.originalname).toLowerCase())
     const mimetype = fileTypes.test(file.mimetype)
     if(mimetype && extname){
         return cb(null,true)
     }else{
-        return cb('Only images allow')
+        cb(new Error('Only images allow'))
     }
 }
 
