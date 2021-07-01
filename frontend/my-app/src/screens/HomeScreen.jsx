@@ -6,6 +6,7 @@ import { listProduct } from "../actions/productActions";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
 import Title from '../components/Title'
+import { PRODUCT_DETAIL_RESET } from "../constant/productConstants";
 
 const HomeScreen = (history) => {
   const dispatch = useDispatch();
@@ -13,6 +14,8 @@ const HomeScreen = (history) => {
   const { loading, error, products } = productList;
   useEffect(() => {
     dispatch(listProduct());
+
+    dispatch({type: PRODUCT_DETAIL_RESET})
   }, [dispatch]);
 
   return (

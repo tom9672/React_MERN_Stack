@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { detailProduct,createProductReview } from "../actions/productActions";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
-import {PRODUCT_REVIEW_RESET} from '../constant/productConstants'
+import { PRODUCT_REVIEW_RESET} from '../constant/productConstants'
 import {Row,Col,ListGroup,Button,Form } from 'react-bootstrap'
 import Rating from '../components/Rating'
 
@@ -30,8 +30,11 @@ const ProductScreen = ({ match }) => {
       setRating(5)
       setComment('')
     }
-    dispatch(detailProduct(match.params.id));
+
+    dispatch(detailProduct(match.params.id))
+    
     dispatch({type:PRODUCT_REVIEW_RESET})
+    
   }, [dispatch, match, success]);
 
   const reviewHandler = (e)=>{
