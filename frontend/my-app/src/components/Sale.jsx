@@ -15,6 +15,7 @@ const Sale = ({ product }) => {
   const [qty, setQty] = useState(1);
   const history = useHistory();
 
+
   const addToCartHandler = () => {
     history.push(`/cart/${product._id}/qty=${qty}`);
   };
@@ -29,7 +30,7 @@ const Sale = ({ product }) => {
             <h3>{product.name}</h3>
           </ListGroup.Item>
           <ListGroup.Item>
-            Rating: <Rating value={product.rating} text="from 80 reviews" />
+            Rating: <Rating value={product.rating} text={`from ${product.numReviews} reviews`} />
           </ListGroup.Item>
           <ListGroup.Item>
             <h3>Price: {product.price}</h3>
