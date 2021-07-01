@@ -1,13 +1,13 @@
-import React, { useEffect } from "react";
+import React, { useState,useEffect } from "react";
 import { getOrderById } from "../actions/orderActions";
 import { useDispatch, useSelector } from "react-redux";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
-import { Col, Row, Image, ListGroup } from "react-bootstrap";
+import { Col, Row, Image, ListGroup, Button,Modal } from "react-bootstrap";
 
 const GetOrderByIdScreen = ({ location }) => {
-  //const [order, setOrder] = useState({});
-
+  const [show, setShow] = useState(false);
+  const [QRCode, setQRCode] = useState('');
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -16,6 +16,15 @@ const GetOrderByIdScreen = ({ location }) => {
 
   const order = useSelector((state) => state.getOrderById);
   const { loading, orderDetails, error, success } = order;
+
+  const modalCloseHandler = () =>{
+    setShow(false)
+  }
+  const modalOpenHandler = () =>{
+    setQRCode()
+    setShow(true)
+  }
+
   return (
     <div>
       {loading && <Loader />}
@@ -35,16 +44,17 @@ const GetOrderByIdScreen = ({ location }) => {
                 State: {orderDetails.shippingAddress.provience}
                 <br />
                 {!orderDetails.isDelived && (
-                  <Message variant="danger">Not Shippied</Message>
+                  <Message variant="info">Not Shippied</Message>
                 )}
               </ListGroup.Item>
               <br />
               <ListGroup.Item>
-                <h3>Payment Method</h3>
-                Payment: {orderDetails.paymentMethod}
+                <h3>Payment Method: {orderDetails.paymentMethod}</h3>
+                <br />
                 {!orderDetails.isPaid && (
-                  <Message variant="danger">Not paid</Message>
+                  <Button onClick={modalOpenHandler}>Not paid, go to pay</Button>
                 )}
+
               </ListGroup.Item>
               <br />
               <ListGroup.Item>
@@ -92,6 +102,25 @@ const GetOrderByIdScreen = ({ location }) => {
           </Col>
         </Row>
       )}
+
+
+      <Modal show={show} onHide={modalCloseHandler}>
+        <Modal.Header closeButton>
+          <Modal.Title>Order ID: {orderDetails && orderDetails._id}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body >
+        <p>Payment Method: {orderDetails && orderDetails.paymentMethod}</p>
+        <Image src={QRCode}></Image>
+        <p>Total Price: {orderDetails && orderDetails.totalPrice}</p>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="primary" onClick={modalCloseHandler}>
+            Close
+          </Button>
+          
+        </Modal.Footer>
+      </Modal>
+
     </div>
   );
 };
