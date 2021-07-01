@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import Rating from "../components/Rating";
+import Title from '../components/Title'
 import {
   Row,
   Col,
@@ -20,7 +21,9 @@ const Sale = ({ product }) => {
     history.push(`/cart/${product._id}/qty=${qty}`);
   };
   return product ? (
+    
     <Row>
+      <Title title={product.name}/>
       <Col md={6}>
         <Image src={product.img} alt={product.name} fluid />
       </Col>

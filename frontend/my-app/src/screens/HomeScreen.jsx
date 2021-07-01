@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { listProduct } from "../actions/productActions";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
+import Title from '../components/Title'
 
 const HomeScreen = (history) => {
   const dispatch = useDispatch();
@@ -16,6 +17,7 @@ const HomeScreen = (history) => {
 
   return (
     <>
+      <Title />
       <h1>Top sale lips</h1>
       {loading ? (
         <Loader />
