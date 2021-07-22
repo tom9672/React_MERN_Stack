@@ -67,3 +67,14 @@ export const gerOrders =asyncHandler(async (req,res)=>{
   const orders = await Order.find({}).populate('user', 'id name')
   res.json(orders)
 })
+
+// @desc pay complete
+// @route put/api/orders/:id
+// @access private 
+export const paySuccess = asyncHandler (async (req,res)=>{
+  const order = await Order.findById(req.params.id)
+  order.isPaid = true
+  console.log(order)
+  await order.save()
+  res.send({message:'pay successful'})
+})

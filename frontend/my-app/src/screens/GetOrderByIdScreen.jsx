@@ -4,18 +4,48 @@ import { useDispatch, useSelector } from "react-redux";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
 import { Col, Row, Image, ListGroup, Button,Modal } from "react-bootstrap";
+import axios from "axios";
+import { PayPalButton } from "react-paypal-button-v2";
 
-const GetOrderByIdScreen = ({ location }) => {
+const GetOrderByIdScreen = ({ location,history }) => {
   const [show, setShow] = useState(false);
   const [QRCode, setQRCode] = useState('');
+  const [SDK, setSDK] = useState(false);
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(getOrderById(location.pathname.split("/")[3]));
-  }, [dispatch, location]);
 
   const order = useSelector((state) => state.getOrderById);
   const { loading, orderDetails, error, success } = order;
+  
+  const userLoginState = useSelector((state) => state.userLogin);
+  const { userInfo } = userLoginState;
+
+  useEffect(() => {
+    const getPaypalClientId = async () =>{
+      const {data:clientId} = await axios.get('/api/config/paypal_client_id')
+      const script = document.createElement('script')
+      script.type = 'text/javascript'
+      script.src = `https://www.paypal.com/sdk/js?client-id=${clientId}`
+      script.async = true
+      script.onLoad = () =>{
+        setSDK(true)
+      }
+      document.body.append(script)
+    }
+    
+    if(!userInfo){
+      history.push('/login')
+    }
+    if(!order.isPaid){
+      if(!window.paypal){
+        getPaypalClientId()
+      }
+    }else{
+      setSDK(true)
+    }
+
+    dispatch(getOrderById(location.pathname.split("/")[3]));
+  }, [dispatch, location, userInfo, history]);
+
 
   const modalCloseHandler = () =>{
     setShow(false)
@@ -25,6 +55,25 @@ const GetOrderByIdScreen = ({ location }) => {
     setShow(true)
   }
 
+  const successPaymenthandler = async (paymentResult) =>{
+    
+    if(paymentResult.status === "COMPLETED"){
+      try{
+        const config = {
+          headers: {
+            "Content-type": "application/json",
+            Authorization: `Bearer ${userInfo.token}`,
+          },
+        };
+        console.log(userInfo.token)
+        const {data} = await axios.put(`/api/orders/${orderDetails._id}`, config)
+        console.log(data)
+      }catch(error){
+        console.log(error)
+      }
+     
+    }
+  }
   return (
     <div>
       {loading && <Loader />}
@@ -51,9 +100,17 @@ const GetOrderByIdScreen = ({ location }) => {
               <ListGroup.Item>
                 <h3>Payment Method: {orderDetails.paymentMethod}</h3>
                 <br />
-                {!orderDetails.isPaid && (
-                  <Button onClick={modalOpenHandler}>Not paid, go to pay</Button>
-                )}
+                {!orderDetails.isPaid & orderDetails.paymentMethod ==='PayPal' ? (
+                  <PayPalButton
+                  amount={orderDetails.totalPrice}
+                  onSuccess={successPaymenthandler}
+                />
+                ) : !orderDetails.isPaid & orderDetails.paymentMethod === 'WeChat' ? (
+                  <Button>WeiChat Pay</Button>
+                ) : !orderDetails.isPaid & orderDetails.paymentMethod === 'Alipay' ?(
+                  <Button>AliPay</Button>
+                ):
+                <p>You've already paid</p>}
 
               </ListGroup.Item>
               <br />

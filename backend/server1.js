@@ -20,6 +20,10 @@ if(process.env.NODE_ENV === 'development'){
   app.use(morgan('dev'))
 }
 
+app.use("/api/config/paypal_client_id", (req,res)=>{
+  res.send(process.env.PAYPAL_CLIENT_ID)
+});
+
 app.use("/api/products", productRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/orders", orderRoutes);
